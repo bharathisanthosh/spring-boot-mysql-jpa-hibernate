@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -48,14 +49,17 @@ public class UserDao {
   /**
    * Delete the user from the database.
    */
-  public void delete(User user) {
-    user = entityManager.find(User.class, user.getId());
+  public int delete(User user) {
+    Query query = entityManager.createQuery("delete from User where id=:ID and tenantId=:TENANT_ID ");
+    query.setParameter("ID", user.getId());
+    query.setParameter("TENANT_ID", user.getTenantId());
+    int result = query.executeUpdate();
 
-    if (entityManager.contains(user))
+    /*if (entityManager.contains(user))
       entityManager.remove(user);
     else
-      entityManager.remove(entityManager.merge(user));
-    return;
+      entityManager.remove(entityManager.merge(user));*/
+    return result;
   }
   
   /**

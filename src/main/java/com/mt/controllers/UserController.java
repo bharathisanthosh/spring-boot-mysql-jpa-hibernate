@@ -66,17 +66,24 @@ public class UserController {
   @RequestMapping(value="/delete")
   @ResponseBody
   public String delete(long id) {
+    int result;
     try {
       User user = new User(id);
       int tid = Integer.parseInt("" + request.getAttribute("CURRENT_TENANT_IDENTIFIER"));
       user.setTenantId(tid);
 
-      userDao.delete(user);
+      result = userDao.delete(user);
     }
     catch (Exception ex) {
       return "Error deleting the user: " + ex.toString();
     }
-    return "User successfully deleted!";
+
+    if(result > 0) {
+      return "User successfully deleted!";
+    }else{
+      return "User not found!";
+    }
+
   }
   
   /**
