@@ -7,7 +7,10 @@ import com.mt.models.UserDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -40,32 +43,40 @@ public class UserController {
   // PUBLIC METHODS
   // ------------------------
 
+  @RequestMapping(value="/user/create")
+  //@ResponseBody
+  public String create(Model model) {
+    model.addAttribute("user", new User());
+    return "create";
+  }
+
   /**
    * Create a new user with an auto-generated id and email and name as passed 
    * values.
    */
-  @RequestMapping(value="/create")
-  @ResponseBody
-  public String create(String email, String name) {
+  @RequestMapping(value="user/save", method= RequestMethod.POST)
+  //@ResponseBody
+  public String save(User user) {
     try {
-      User user = new User(email, name);
+      //User user = new User(email, name);
       int tid = Integer.parseInt("" + request.getAttribute("CURRENT_TENANT_IDENTIFIER"));
       user.setTenantId(tid);
-      userDao.create(user);
+      userDao.save(user);
     }
     catch (Exception ex) {
       ex.printStackTrace();
       return "Error creating the user: " + ex.toString();
     }
-    return "User successfully created!";
+    //return "User successfully created!";
+    return "redirect:/user/list";
   }
   
   /**
    * Delete the user with the passed id.
    */
-  @RequestMapping(value="/delete")
-  @ResponseBody
-  public String delete(long id) {
+  @RequestMapping(value="user/delete/{id}")
+  //@ResponseBody
+  public String delete(@PathVariable Integer id, Model model) {
     int result;
     try {
       User user = new User(id);
@@ -79,7 +90,7 @@ public class UserController {
     }
 
     if(result > 0) {
-      return "User successfully deleted!";
+      return "redirect:/user/list";
     }else{
       return "User not found!";
     }
@@ -101,6 +112,12 @@ public class UserController {
       return "User not found: " + ex.toString();
     }
     return "The user id is: " + userId;
+  }
+
+  @RequestMapping("/user/edit/{id}")
+  public String edit(@PathVariable Integer id, Model model){
+    model.addAttribute("user", userDao.getById(id));
+    return "create";
   }
   
   /**
@@ -124,19 +141,20 @@ public class UserController {
   /**
    * list all users of a tenant.
    */
-  @RequestMapping(value="/list")
-  @ResponseBody
-  public String list() {
+  @RequestMapping(value="/user/list")
+  //@ResponseBody
+  public String list(Model model) {
     List<User> resultList;
     try {
       int tid = Integer.parseInt("" + request.getAttribute("CURRENT_TENANT_IDENTIFIER"));
       resultList = userDao.getAll(tid);
+      model.addAttribute("user_list", resultList);
     }
     catch (Exception ex) {
       return "Error fetching list of users: " + ex.toString();
       //return null;
     }
-    return resultList.toString();
+    return "list";
   }
 
 

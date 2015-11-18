@@ -4,6 +4,7 @@ import com.mt.models.Tenant;
 import com.mt.models.TenantDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
@@ -15,12 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class MainController {
 
+  @Autowired
+  private HttpServletRequest request;
+
+  @Autowired
+  private HttpServletResponse response;
+
   @RequestMapping("/")
-  @ResponseBody
-  public String index(HttpServletRequest request, HttpServletResponse response) {
+  //@ResponseBody
+  public String index(Model model) {
 
     String tid = ""+request.getAttribute("CURRENT_TENANT_IDENTIFIER");
-    return "Welcome "+tid+":)";
+    model.addAttribute("message", "HELLO! "+tid+" :)");
+    return "hello";
   }
 
 }

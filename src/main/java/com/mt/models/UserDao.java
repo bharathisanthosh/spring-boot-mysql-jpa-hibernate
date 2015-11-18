@@ -37,6 +37,18 @@ public class UserDao {
   // ------------------------
   // PUBLIC METHODS
   // ------------------------
+
+  /**
+   * Save the user in the database.
+   */
+  public void save(User user) {
+    if( user.getId()> 0 ){
+      entityManager.merge(user);
+    }else {
+      entityManager.persist(user);
+    }
+    return;
+  }
   
   /**
    * Save the user in the database.
