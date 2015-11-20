@@ -9,15 +9,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * Represents an User for this web application.
+ * Represents a Product for this web application.
  */
 @Entity
-@Table(name = "user")
+@Table(name = "product")
 @FilterDef(name="tenantFilter", parameters=@ParamDef(name="tenantId",type="int"))
 @Filters(
         @Filter(name="tenantFilter",condition="tenant_id = :tenantId")
 )
-public class User {
+public class Product {
 
   // ------------------------
   // PRIVATE FIELDS
@@ -28,10 +28,15 @@ public class User {
   private long id;
   
   @NotNull
-  private String email;
+  private String code;
   
   @NotNull
   private String name;
+
+  private String description;
+
+  @NotNull
+  private String price;
 
   @Column(name="tenant_id",nullable=false)
   private int tenantId;
@@ -40,15 +45,17 @@ public class User {
   // PUBLIC METHODS
   // ------------------------
   
-  public User() { }
+  public Product() { }
 
-  public User(long id) { 
+  public Product(long id) {
     this.id = id;
   }
 
-  public User(String email, String name) {
-    this.email = email;
+  public Product(String code, String name, String description, String price) {
+    this.code = code;
     this.name = name;
+    this.description = description;
+    this.price = price;
   }
 
   public long getId() {
@@ -59,12 +66,12 @@ public class User {
     this.id = value;
   }
 
-  public String getEmail() {
-    return email;
+  public String getCode() {
+    return code;
   }
   
-  public void setEmail(String value) {
-    this.email = value;
+  public void setCode(String value) {
+    this.code = value;
   }
   
   public String getName() {
@@ -82,5 +89,20 @@ public class User {
   public void setTenantId(int value) {
     this.tenantId = value;
   }
-  
-} // class User
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getPrice() {
+    return price;
+  }
+
+  public void setPrice(String price) {
+    this.price = price;
+  }
+} // class Product

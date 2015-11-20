@@ -50,4 +50,4 @@ public class Tenant {
         this.domain = value;
     }
 
-} // class User
+} // class Tenant

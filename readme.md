@@ -8,11 +8,11 @@ http://blog.netgloo.com/2014/10/06/spring-boot-data-access-with-jpa-hibernate-an
 - Run the application and go on http://localhost:8080/
 - Use the following urls to invoke controllers methods and see the interactions
   with the database:
-    * `/user/save?email=[email]&name=[name]`: create a new user with an 
-      auto-generated id and email and name as passed values.
+    * `/user/save?code=[code]&name=[name]`: create a new user with an
+      auto-generated id and code and name as passed values.
     * `/user/delete?id=[id]`: delete the user with the passed id.
-    * `/user/get-by-email?email=[email]`: retrieve the id for the user with the
-      passed email address.
+    * `/user/get-by-code?code=[code]`: retrieve the id for the user with the
+      passed code address.
 
 ### Build and run
 

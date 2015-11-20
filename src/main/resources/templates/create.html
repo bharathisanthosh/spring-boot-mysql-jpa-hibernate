@@ -5,15 +5,23 @@
     <title>HELLO</title>
 </head>
 <body>
-<form id="user-form" role="form" th:action="@{/user/save}" method="post" th:object="${user}">
+<form id="product-form" role="form" th:action="@{/product/save}" method="post" th:object="${product}">
     <input type="hidden" th:field="*{id}"/>
     <div>
-        <label for="name">Name : </label>
-        <input type="text" id="field1" name="field1" th:field="${user.name}"/>
+        <label for="code">Code : </label>
+        <input type="text" id="code" name="code" th:field="${product.code}"/>
     </div>
     <div>
-        <label for="email">Email : </label>
-        <input type="text" id="field2" name="field2" th:field="${user.email}"/>
+        <label for="name">Name : </label>
+        <input type="text" id="name" name="name" th:field="${product.name}"/>
+    </div>
+    <div>
+        <label for="description">Description : </label>
+        <input type="text" id="description" name="description" th:field="${product.description}"/>
+    </div>
+    <div>
+        <label for="price">Price : </label>
+        <input type="text" id="price" name="price" th:field="${product.price}"/>
     </div>
     <div>
         <button type="submit">Save</button>

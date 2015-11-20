@@ -1,9 +1,8 @@
 package com.mt.controllers;
 
-import com.mt.models.Tenant;
 import com.mt.models.TenantDao;
-import com.mt.models.User;
-import com.mt.models.UserDao;
+import com.mt.models.Product;
+import com.mt.models.ProductDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,26 +11,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * Class UserController
+ * Class ProductController
  */
 @Controller
-public class UserController {
+public class ProductController {
 
   // ------------------------
   // PRIVATE FIELDS
   // ------------------------
 
-  // Wire the UserDao used inside this controller.
+  // Wire the ProductDao used inside this controller.
   @Autowired
-  private UserDao userDao;
+  private ProductDao productDao;
 
   @Autowired
   private TenantDao tenantDao;
@@ -43,115 +39,117 @@ public class UserController {
   // PUBLIC METHODS
   // ------------------------
 
-  @RequestMapping(value="/user/create")
+  @RequestMapping(value="/product/create")
   //@ResponseBody
   public String create(Model model) {
-    model.addAttribute("user", new User());
+    model.addAttribute("product", new Product());
     return "create";
   }
 
   /**
-   * Create a new user with an auto-generated id and email and name as passed 
+   * Create a new product with an auto-generated id and email and name as passed
    * values.
    */
-  @RequestMapping(value="user/save", method= RequestMethod.POST)
+  @RequestMapping(value="product/save", method= RequestMethod.POST)
   //@ResponseBody
-  public String save(User user) {
+  public String save(Product product) {
     try {
       //User user = new User(email, name);
       int tid = Integer.parseInt("" + request.getAttribute("CURRENT_TENANT_IDENTIFIER"));
-      user.setTenantId(tid);
-      userDao.save(user);
+      product.setTenantId(tid);
+      productDao.save(product);
     }
     catch (Exception ex) {
       ex.printStackTrace();
-      return "Error creating the user: " + ex.toString();
+      return "Error creating the product: " + ex.toString();
     }
     //return "User successfully created!";
-    return "redirect:/user/list";
+    return "redirect:/product/list";
   }
   
   /**
    * Delete the user with the passed id.
    */
-  @RequestMapping(value="user/delete/{id}")
+  @RequestMapping(value="product/delete/{id}")
   //@ResponseBody
   public String delete(@PathVariable Integer id, Model model) {
     int result;
     try {
-      User user = new User(id);
+      Product product = new Product(id);
       int tid = Integer.parseInt("" + request.getAttribute("CURRENT_TENANT_IDENTIFIER"));
-      user.setTenantId(tid);
+      product.setTenantId(tid);
 
-      result = userDao.delete(user);
+      result = productDao.delete(product);
     }
     catch (Exception ex) {
-      return "Error deleting the user: " + ex.toString();
+      return "Error deleting the product: " + ex.toString();
     }
 
     if(result > 0) {
-      return "redirect:/user/list";
+      return "redirect:/product/list";
     }else{
-      return "User not found!";
+      return "Product not found!";
     }
 
   }
   
   /**
-   * Retrieve the id for the user with the passed email address.
+   * Retrieve the id for the product with the passed email address.
    */
   @RequestMapping(value="/get-by-email")
   @ResponseBody
   public String getByEmail(String email) {
-    String userId;
+    String productId;
     try {
-      User user = userDao.getByEmail(email);
-      userId = String.valueOf(user.getId());
+      Product product = productDao.getByEmail(email);
+      productId = String.valueOf(product.getId());
     }
     catch (Exception ex) {
-      return "User not found: " + ex.toString();
+      return "Product not found: " + ex.toString();
     }
-    return "The user id is: " + userId;
+    return "The product id is: " + productId;
   }
 
-  @RequestMapping("/user/edit/{id}")
+  @RequestMapping("/product/edit/{id}")
   public String edit(@PathVariable Integer id, Model model){
-    model.addAttribute("user", userDao.getById(id));
+    model.addAttribute("product", productDao.getById(id));
     return "create";
   }
   
   /**
-   * Update the email and the name for the user indentified by the passed id.
+   * Update the product identified by the passed id.
    */
   @RequestMapping(value="/update")
   @ResponseBody
-  public String updateName(long id, String email, String name) {
+  public String updateName(long id, String code, String name, String description, String price) {
     try {
-      User user = userDao.getById(id);
-      user.setEmail(email);
-      user.setName(name);
-      userDao.update(user);
+      Product product = productDao.getById(id);
+      product.setCode(code);
+      product.setName(name);
+      product.setDescription(description);
+      product.setPrice(price);
+      productDao.update(product);
     }
     catch (Exception ex) {
-      return "Error updating the user: " + ex.toString();
+      return "Error updating the product: " + ex.toString();
     }
-    return "User successfully updated!";
+    return "Product successfully updated!";
   }
 
   /**
-   * list all users of a tenant.
+   * list all products of a tenant.
    */
-  @RequestMapping(value="/user/list")
+  @RequestMapping(value="/product/list")
   //@ResponseBody
   public String list(Model model) {
-    List<User> resultList;
+    List<Product> resultList;
     try {
       int tid = Integer.parseInt("" + request.getAttribute("CURRENT_TENANT_IDENTIFIER"));
-      resultList = userDao.getAll(tid);
-      model.addAttribute("user_list", resultList);
+      resultList = productDao.getAll(tid);
+      model.addAttribute("product_list", resultList);
     }
     catch (Exception ex) {
-      return "Error fetching list of users: " + ex.toString();
+      return "Error fetching list of products: " + ex.toString();
       //return null;
     }
     return "list";
@@ -159,4 +157,4 @@ public class UserController {
 
 
 
-} // class UserController
+} // class ProductController

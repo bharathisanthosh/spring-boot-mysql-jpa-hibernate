@@ -12,7 +12,7 @@ import org.hibernate.Filter;
 import org.springframework.stereotype.Repository;
 
 /**
- * This class is used to access data for the User entity.
+ * This class is used to access data for the Product entity.
  * Repository annotation allows the component scanning support to find and 
  * configure the DAO without any XML configuration and also provide the Spring
  * exception translation.
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Transactional
-public class UserDao {
+public class ProductDao {
 
   // ------------------------
   // PRIVATE FIELDS
@@ -39,80 +39,80 @@ public class UserDao {
   // ------------------------
 
   /**
-   * Save the user in the database.
+   * Save the product in the database.
    */
-  public void save(User user) {
-    if( user.getId()> 0 ){
-      entityManager.merge(user);
+  public void save(Product product) {
+    if( product.getId()> 0 ){
+      entityManager.merge(product);
     }else {
-      entityManager.persist(user);
+      entityManager.persist(product);
     }
     return;
   }
   
   /**
-   * Save the user in the database.
+   * Save the product in the database.
    */
-  public void create(User user) {
-    entityManager.persist(user);
+  public void create(Product product) {
+    entityManager.persist(product);
     return;
   }
   
   /**
-   * Delete the user from the database.
+   * Delete the product from the database.
    */
-  public int delete(User user) {
-    Query query = entityManager.createQuery("delete from User where id=:ID and tenantId=:TENANT_ID ");
-    query.setParameter("ID", user.getId());
-    query.setParameter("TENANT_ID", user.getTenantId());
+  public int delete(Product product) {
+    Query query = entityManager.createQuery("delete from Product where id=:ID and tenantId=:TENANT_ID ");
+    query.setParameter("ID", product.getId());
+    query.setParameter("TENANT_ID", product.getTenantId());
     int result = query.executeUpdate();
 
-    /*if (entityManager.contains(user))
-      entityManager.remove(user);
+    /*if (entityManager.contains(product))
+      entityManager.remove(product);
     else
-      entityManager.remove(entityManager.merge(user));*/
+      entityManager.remove(entityManager.merge(product));*/
     return result;
   }
   
   /**
-   * Return all the users stored in the database.
+   * Return all the products stored in the database.
    */
   @SuppressWarnings("unchecked")
-  public List<User> getAll(int tenantId) {
+  public List<Product> getAll(int tenantId) {
     //Configure your filters
     Session hibernateSession = entityManager.unwrap(Session.class);
     Filter publishedAfterFilter = hibernateSession.enableFilter("tenantFilter");
     publishedAfterFilter.setParameter("tenantId", tenantId);
     publishedAfterFilter.validate();
 
-    return entityManager.createQuery("from User").getResultList();
+    return entityManager.createQuery("from Product").getResultList();
   }
   
   /**
-   * Return the user having the passed email.
+   * Return the product having the passed code.
    */
-  public User getByEmail(String email) {
-    return (User) entityManager.createQuery(
-        "from User where email = :email")
-        .setParameter("email", email)
+  public Product getByEmail(String code) {
+    return (Product) entityManager.createQuery(
+        "fromPproduct where code = :code")
+        .setParameter("code", code)
         .getSingleResult();
   }
 
   /**
-   * Return the user having the passed id.
+   * Return the product having the passed id.
    */
-  public User getById(long id) {
-    return entityManager.find(User.class, id);
+  public Product getById(long id) {
+    return entityManager.find(Product.class, id);
   }
 
   /**
-   * Update the passed user in the database.
+   * Update the passed product in the database.
    */
-  public void update(User user) {
-    entityManager.merge(user);
+  public void update(Product product) {
+    entityManager.merge(product);
     return;
   }
 
 
   
-} // class UserDao
+} // class ProductDao
